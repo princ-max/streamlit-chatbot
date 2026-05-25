@@ -1,29 +1,54 @@
-import streamlit as st 
-from openai import OpenAI
+from langchain_openai import ChatOpenAI
+import streamlit as st
+from langchain_core.messages import HumanMessage, AIMessage
+# from dotenv import load_dotenv
 import os
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-if "message" not in st.session_state:
-    st.session_state.messages=[]
 
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+# load_dotenv()
 
-prompt = st.chat_input("type your message")
+model = ChatOpenAI(model="gpt-4.1-mini", api_key=os.getenv("OPENAI_API_KEY"))
 
-if prompt:
-    st.session_state.messages.append({"role":"user","content":prompt})
-    with st.chat_message("user"):
-        st.write(prompt)
-        
-    response = client.chat.completions.create(
-        model="gpt-4.1-mini",
-        messages=st.session_state.messages
-    )
-    reply = response.choices[0].message.content
+st.title("Prince Chatbot")
 
-    st.session_state.messages.append({"role":"user","content":reply})
+# store chat history
 
-    with st.chat_message("assistant"):
-        st.write(reply)
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+# show old messages
+
+for message in st.session_state.chat_history:
+    if isinstance(message, HumanMessage):
+        st.chat_message("user").write(message.content)
+    elif isinstance(message, AIMessage):
+        st.chat_message("assistant").write(message.content)
+
+
+
+# User input
+
+user_input = st.chat_input("type your message....")
+
+if user_input:
+    st.chat_message("user").write(user_input)
+
+#save user message
+
+    st.session_state.chat_history.append(HumanMessage(content=user_input))
+
+# Get AI response
+
+    result = model.invoke(st.session_state.chat_history)
+
+#show AI response
+
+    st.chat_message("assistant").write(result.content)
+
+#send all history to model
+
+    result=model.invoke(st.session_state.chat_history)
+
+#save AI response
+
+    st.session_state.chat_history.append(AIMessage(content=result.content))
