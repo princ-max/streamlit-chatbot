@@ -13,7 +13,7 @@ for message in st.session_state.messages:
 prompt = st.chat_input("type your message")
 
 if prompt:
-    st.session_state.message.append({"role":"user","content":prompt})
+    st.session_state.messages.append({"role":"user","content":prompt})
     with st.chat_message("user"):
         st.write(prompt)
         
@@ -23,7 +23,7 @@ if prompt:
     )
     reply = response.choices[0].message.content
 
-    st.session_state.message.append({"role":"user","content":reply})
+    st.session_state.messages.append({"role":"user","content":reply})
 
     with st.chat_message("assistant"):
         st.write(reply)
