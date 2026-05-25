@@ -1,6 +1,6 @@
 streamlit
 langchain
 langchain-core
-langchain-openai
+langchain-openai==0.3.27
 openai
 python-dotenv
