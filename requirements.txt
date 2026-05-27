@@ -4,3 +4,6 @@ python-dotenv
 langchain
 langchain-core
 langchain-openai
+langchain
+langchain-community
+tavily-python
