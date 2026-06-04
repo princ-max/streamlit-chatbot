@@ -4,6 +4,5 @@ python-dotenv
 langchain==0.2.16
 langchain-core
 langchain-openai==0.1.23
-langchain
 langchain-community==0.2.16
 tavily-python
